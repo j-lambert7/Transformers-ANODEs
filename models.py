@@ -102,12 +102,13 @@ class ODEBlock(nn.Module):
         If True calculates gradient with adjoint method, otherwise
         backpropagates directly through operations of ODE solver.
     """
-    def __init__(self, device, odefunc, is_conv=False, tol=1e-3, adjoint=False):
+    def __init__(self, device, odefunc, is_conv=False, is_seq=False, tol=1e-3, adjoint=False):
         super(ODEBlock, self).__init__()
         self.adjoint = adjoint
         self.device = device
         self.is_conv = is_conv
         self.odefunc = odefunc
+        self.is_seq = is_seq
         self.tol = tol
 
     def forward(self, x, eval_times=None):
@@ -140,6 +141,11 @@ class ODEBlock(nn.Module):
                                   height, width).to(self.device)
                 # Shape (batch_size, channels + augment_dim, height, width)
                 x_aug = torch.cat([x, aug], 1)
+            elif self.is_seq:
+                batch_size, emb_size, len_seq = x.shape
+                aug = torch.zeros(batch_size, self.odefunc.augment_dim, len_seq)
+                x_aug = torch.cat([x, aug], 1)
+
             else:
                 # Add augmentation
                 aug = torch.zeros(x.shape[0], self.odefunc.augment_dim).to(self.device)
