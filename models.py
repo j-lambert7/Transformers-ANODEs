@@ -142,9 +142,9 @@ class ODEBlock(nn.Module):
                 # Shape (batch_size, channels + augment_dim, height, width)
                 x_aug = torch.cat([x, aug], 1)
             elif self.is_seq:
-                batch_size, emb_size, len_seq = x.shape
-                aug = torch.zeros(batch_size, self.odefunc.augment_dim, len_seq)
-                x_aug = torch.cat([x, aug], 1)
+                batch_size, len_seq, emb_size = x.shape
+                aug = torch.zeros(batch_size, len_seq, self.odefunc.augment_dim)
+                x_aug = torch.cat([x, aug], 2)
 
             else:
                 # Add augmentation
