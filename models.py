@@ -143,7 +143,7 @@ class ODEBlock(nn.Module):
                 x_aug = torch.cat([x, aug], 1)
             elif self.is_seq:
                 batch_size, len_seq, emb_size = x.shape
-                aug = torch.zeros(batch_size, len_seq, self.odefunc.augment_dim)
+                aug = torch.zeros(batch_size, len_seq, self.odefunc.augment_dim).to(self.device)
                 x_aug = torch.cat([x, aug], 2)
 
             else:
