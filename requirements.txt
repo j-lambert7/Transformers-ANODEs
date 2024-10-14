@@ -1,0 +1,6 @@
+numpy
+matplotlib
+torch
+torchdiffeq
+torchtext==0.6.0
+tqdm
